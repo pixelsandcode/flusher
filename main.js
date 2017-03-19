@@ -10,7 +10,6 @@ module.exports = (server = "http://localhost") => {
   return {
     flushAll(bucketName, cb)
     {
-      let bucket = cluster.openBucket(bucketName)
       const options = {
         method: 'PUT',
         uri: `${server}:8092/${bucketName}/_design/dev_flusher`,
@@ -34,7 +33,8 @@ module.exports = (server = "http://localhost") => {
           body = JSON.parse(body)
           const results = body.rows
           if (results.length != 0) {
-            let j = 1;
+            let bucket = cluster.openBucket(bucketName)
+            let j = 1
             for (let i = 0; i < results.length; i++) {
               bucket.remove(results[i].id, function (err, res) {
                 if (err) console.log(err)
@@ -47,7 +47,6 @@ module.exports = (server = "http://localhost") => {
             }
           }
           else {
-            bucket.disconnect()
             cb(null)
           }
         })
