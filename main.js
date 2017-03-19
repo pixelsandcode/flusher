@@ -26,7 +26,7 @@ module.exports = (server = "http://localhost") => {
       }
       request.put(options, function (err, res) {
         if (err) cb(err)
-        if (res.status != 201) cb('can not create view on bucket')
+        if (res.statusCode != 201) cb('can not create view on bucket')
         request.get({
           url: `http://127.0.0.1:8092/${bucketName}/_design/dev_flusher/_view/get_all?stale=false&inclusive_end=true&connection_timeout=6000&skip=0&reduce=false`
         }, function (err, httpResponse, body) {
